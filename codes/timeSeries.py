@@ -2,19 +2,20 @@ import pandas as pd
 from funcs import RMSE
 import statsmodels.api as sm
 import matplotlib
-path="/home/home/PycharmProjects/1c/"
+path="/home/pooja/PycharmProjects/1c/"
 pathData = path+"data"
 writer = pd.ExcelWriter(path+"/derivedData/" +"analysis.xlsx", engine='xlsxwriter')
 df1=pd.read_csv(path+"/derivedData/" +"train.csv", index_col=None, header=0)
-a1=df1[df1.date_block_num==33 & df1.item_category_id.isin([12])]
+#df1=pd.read_csv(pathData+"/sales_train_v2.csv", index_col=None, header=0)
+a1=df1
 a0=pd.DataFrame(a1.groupby(["shop_id","item_id"]).sum()['item_cnt_day']).reset_index()
 a0['ID']=a0.index
 test=a1
 train=df1.drop(test.index,axis=0)
-#test.to_csv(path+"/derivedData/" +"test.csv")
+test=pd.read_csv("/home/pooja/PycharmProjects/1c/data/test.csv")
 #train.to_csv(path+"/derivedData/" +"train.csv")
 #writer.save()
-test=a0.drop(['item_cnt_day'],axis=1)
+#test=a0.drop(['item_cnt_day'],axis=1)
 remaining=test
 done=pd.DataFrame()
 for block in range(-32,0):
@@ -33,7 +34,7 @@ w=int(test[["item_id"]].nunique())
 done['item_cnt_month']=done['item_cnt_day']
 done=done.drop(["shop_id","item_id", "item_cnt_day"],axis=1)
 done=done.set_index('ID')
-#done.to_csv(path + "/output/past.csv")
+done.to_csv(path + "/output/past.csv")
 final=done.join(a0[["item_cnt_day"]])
 final['error'] = ((final["item_cnt_day"] -final['item_cnt_month']) ** 2)
 f = final.sort_values(by=['error'],ascending=False)

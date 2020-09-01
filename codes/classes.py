@@ -24,7 +24,7 @@ class manager():
         temp=dataset.corr()[target:target]
         return temp
 
-    def iterator(self,loc):
+    def iterator(self,loc,file1=None):
         file1 = pd.read_csv(loc + str(0) + '.csv')
         corF=pd.DataFrame()
 
@@ -38,12 +38,12 @@ class manager():
            temp['obselete'] = it.obselete
            temp=temp[temp.columns.tolist()[-4:]+temp.columns.tolist()[:-4]]
            corF=corF.append(temp.drop(['item_id'],axis=1))
-        corF.to_csv("/home/home/PycharmProjects/1c/derivedData/cor.csv")
+        corF.to_csv(file1)
 
 
 
     def makeItem(self,dataset):
-
+        "variable Creation"
         ascen = dataset.sort_values(['item_id', self.span], ascending=True)
      
         first = ascen.drop_duplicates(subset=['item_id'], keep='first').set_index('item_id')
@@ -65,7 +65,8 @@ class manager():
                 item1.obselete=int(item1.lDate<30)
                 item1.mnthCount = count1[self.span][i]
                 self.itemList.extend([item1])
-    def putRetreive(self,put,file1):
+    def putRetreive(self,put,file1=None):
+        'pull/put the information from/to file'
         if put==1:
             item1=pd.DataFrame(columns=['item_id','sDate','lDate','sPrice','lPrice','category','name1','catName','averSell','obselete','mnthCount'],index=range(len(self.itemList)))
             for i in range(0,len(self.itemList)):
@@ -130,11 +131,6 @@ class vMaker():
     def change(df,varList,par=1):
         d=df[varList].diff(periods=par)
         return df.join(d,rsuffix= 'diff'+str(par))
-
-
-
-
-
 
 
 

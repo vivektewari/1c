@@ -51,6 +51,16 @@ class modelRunner(pastLooker):
             first['predicted']=first['item_cnt_day_sum']
             temp=temp.append(first[self.level+['predicted']])
         self.prediction=temp
+class modelRunner(pastLooker):
+    def train(self,itList,loc):
+        temp=pd.DataFrame()
+        for it in itList:
+            dataset=pastLooker.getX(it.id, loc)
+            decen = dataset.sort_values(self.level+[self.span],ascending=False)
+            first = decen.drop_duplicates(subset=self.level, keep='first')
+            first['predicted']=first['item_cnt_day_sum']
+            temp=temp.append(first[self.level+['predicted']])
+        self.prediction=temp
 
 
 

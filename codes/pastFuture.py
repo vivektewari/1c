@@ -1,6 +1,6 @@
 import pandas as pd
 from funcs import RMSE
-path="/home/home/PycharmProjects/1c/"
+path="/home/pooja/PycharmProjects/1c/"
 pathData = path+"data"
 #writer = pd.ExcelWriter(path+"/derivedData/" +"analysis.xlsx", engine='xlsxwriter')
 df1=pd.read_csv(pathData+"/sales_train_v2.csv", index_col=None, header=0)
@@ -9,8 +9,8 @@ a0=pd.DataFrame(a1.groupby(["item_id"]).sum()['item_cnt_day']).reset_index()
 a0['ID']=a0["item_id"]
 test=a1
 train=df1.drop(test.index,axis=0)
-#test.to_csv(path+"/derivedData/" +"test.csv")
-#train.to_csv(path+"/derivedData/" +"train.csv")
+test.to_csv(path+"/derivedData/" +"test.csv")
+train.to_csv(path+"/derivedData/" +"train.csv")
 #writer.save()
 test=a0.drop(['item_cnt_day'],axis=1)
 remaining=test
@@ -36,6 +36,7 @@ final=done.join(a0[['ID',"item_cnt_day"]].set_index('ID'))
 final['error'] = ((final["item_cnt_day"] -final['item_cnt_month']) ** 2)
 final.to_csv(path + "/output/past.csv")
 f = final.sort_values(by=['error'],ascending=False)
+f.to_csv(path+"mistakes.csv")
 y=RMSE(final,'item_cnt_day','item_cnt_month')
 print(y)
 a=1
